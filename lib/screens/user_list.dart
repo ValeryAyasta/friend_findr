@@ -67,17 +67,22 @@ class _UserItemState extends State<UserItem> {
   @override
   Widget build(BuildContext context) {
 
-    final image=Image.network(widget.user.picture!.thumbnail!);
+    final image= CircleAvatar(
+      backgroundImage: NetworkImage(widget.user.picture!.thumbnail!),
+      radius: 40,
+    );
+
 
     return Card(
       child: ListTile(
         leading: image,
-        title: Text('First Name: ${widget.user.name?.first != null ? widget.user.name!.first! : 'First name is not defined'}'),
+        title: Text(widget.user.name?.first != null ? widget.user.name!.first! : 'First name is not defined'),
         subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Last Name: ${widget.user.name?.last != null ? widget.user.name!.last! : 'Last Name is not defined'}'),
-            Text('Email: ${widget.user.email != null ? widget.user.email! : 'Last Name is not defined'}'),
-            Text('Cell: ${widget.user.cell != null ? widget.user.cell! : 'Cell is not defined'}'),
+            Text(widget.user.name?.last != null ? widget.user.name!.last! : 'Last Name is not defined'),
+            Text(widget.user.email != null ? widget.user.email! : 'Last Name is not defined'),
+            Text(widget.user.cell != null ? widget.user.cell! : 'Cell is not defined'),
           ],
         ),
       ),
