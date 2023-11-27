@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:friend_findr/repository/UserRepository.dart';
-import 'package:friend_findr/services/user_service.dart';
 
 import '../models/User.dart';
 
-class UserList extends StatefulWidget {
-  const UserList({super.key});
+class UserFavorites extends StatefulWidget {
+  const UserFavorites({super.key});
 
   @override
-  State<UserList> createState() => _UserListState();
+  State<UserFavorites> createState() => _UserFavoritesState();
 }
 
-class _UserListState extends State<UserList> {
-  UserService? _userService;
+class _UserFavoritesState extends State<UserFavorites> {
+  UserRepository? _userRepository;
   List? listUsers;
   late Future _future;
-  TextEditingController resultController = TextEditingController();
 
   Future initialize() async{
-    listUsers = await _userService?.getAll(10);
+    listUsers = await _userRepository?.getAll();
   }
 
   @override
   void initState() {
-    _userService = UserService();
+    _userRepository = UserRepository();
     _future = initialize();
     super.initState();
   }
@@ -94,7 +92,7 @@ class _UserItemState extends State<UserItem> {
     );
 
     final myIcon= _add? const Icon(
-      Icons.delete,color:Colors.orange,
+      Icons.delete,color:Colors.orangeAccent,
     ):const Icon(
       Icons.favorite,color:Colors.grey,
     );
@@ -107,9 +105,9 @@ class _UserItemState extends State<UserItem> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.user.name?.last != null ? widget.user.name!.last! : 'Last Name is not defined'),
-            Text(widget.user.email != null ? widget.user.email! : 'Last Name is not defined'),
-            Text(widget.user.cell != null ? widget.user.cell! : 'Cell is not defined'),
+            Text(widget.user.name?.title != null ? widget.user.name!.title! : 'Last Name is not defined'),
+            Text(widget.user.gender != null ? widget.user.gender! : 'Last Name is not defined'),
+            Text(widget.user.location?.city != null ? widget.user.location!.city! : 'Last Name is not defined'),
           ],
         ),
         trailing: IconButton(
@@ -119,8 +117,8 @@ class _UserItemState extends State<UserItem> {
               _add = !_add;
             });
             _add?
-                _userRepository?.insert(widget.user)
-            : _userRepository?.delete(widget.user);
+            _userRepository?.insert(widget.user)
+                : _userRepository?.delete(widget.user);
           },
         ),
       ),
