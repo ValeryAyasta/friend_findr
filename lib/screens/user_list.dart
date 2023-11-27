@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:friend_findr/repository/UserRepository.dart';
 import 'package:friend_findr/services/user_service.dart';
 
@@ -14,17 +15,17 @@ class UserList extends StatefulWidget {
 class _UserListState extends State<UserList> {
   UserService? _userService;
   List? listUsers;
-  late Future _future;
+ late Future _future;
   TextEditingController resultController = TextEditingController();
 
-  Future initialize() async{
-    listUsers = await _userService?.getAll(10);
+  Future initialize(int results) async{
+    listUsers = await _userService?.getAll(results);
   }
 
   @override
   void initState() {
     _userService = UserService();
-    _future = initialize();
+    _future = initialize(0);
     super.initState();
   }
 
@@ -34,11 +35,42 @@ class _UserListState extends State<UserList> {
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            return ListView.builder(
-              itemCount: listUsers!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return UserItem(user:listUsers![index]);
-              },
+            return Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: resultController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: 'Buscar...',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: (){
+                          String searchText = resultController.text;
+    if (resultController.text.isNotEmpty) {
+                          _future = initialize(int.parse(searchText));
+                          if(mounted){
+                          setState(() {
+                          });}
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: listUsers!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return UserItem(user:listUsers![index]);
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             return const Center(
