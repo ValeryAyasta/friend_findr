@@ -30,11 +30,7 @@ class _UserListState extends State<UserList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('FriendFindr'),
-      ),
-      body: FutureBuilder(
+    return  FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
@@ -50,8 +46,7 @@ class _UserListState extends State<UserList> {
             );
           }
         },
-      ),
-    );
+      );
   }
 }
 
