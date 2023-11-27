@@ -10,26 +10,34 @@ class UserRepository{
   Future insert(User user) async{
     Database db= await AppDatabase().openDb();
 
-    db.insert(AppDatabase().tableName, user.toMap());
+    db.insert(AppDatabase().tableName, user.toMap()).then((value) => print('Agregado'));
+
+    //print('Agregado');
   }
 
-  Future delete(User user) async{
-    Database db= await AppDatabase().openDb();
+  Future delete(User user) async {
+    Database db = await AppDatabase().openDb();
 
-    db.delete(AppDatabase().tableName,
-        where: "id=?", whereArgs:[user.id]);
+    db.delete(
+      AppDatabase().tableName,
+      where: "id_name = ? AND id_value = ?",
+      whereArgs: [user.id!.name, user.id!.value],
+    ).then((value) => print('Eliminado'));
   }
 
-  //lista users que se marcaron como favorito
-  Future<bool> isAdd(User user) async{
-    Database db= await AppDatabase().openDb();
 
-    final maps=await db.query(AppDatabase().tableName,
-        where: "id=?", whereArgs: [user.id]);
+  Future<bool> isAdd(User user) async {
+    Database db = await AppDatabase().openDb();
 
-    //maps esta lleno es true, por eso el "isNotEmpty"
-    return maps.isNotEmpty;  //devuelve todos los que se guardaron en la tabla
+    final maps = await db.query(
+      AppDatabase().tableName,
+      where: "id_name = ? AND id_value = ?",
+      whereArgs: [user.id!.name, user.id!.value],
+    );
+
+    return maps.isNotEmpty;
   }
+
 
   Future<List<User>> getAll() async{
 
@@ -44,11 +52,12 @@ class UserRepository{
       return User(
           maps[i]['gender'],
           Name(maps[i]['title'], maps[i]['firstName'], maps[i]['lastName']),
-          Location(maps[i]['city']),
+          Location(maps[i]['location']),
           maps[i]['email'],
           maps[i]['cell'],
-          maps[i]['id'],
+          Id(maps[i]['id_name'], maps[i]['id_value']),
           Picture(maps[i]['picture']));
+
     });
   }
 

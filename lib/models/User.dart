@@ -30,14 +30,15 @@ class User {
 
   Map<String, dynamic> toMap(){
     return {
-      'id': id!.value,
-      'firstName': name!.first,
-      'lastName': name!.last,
-      'title': name!.title,
+      'id_name': id!.name!, // Cambiar a id!.value o el tipo de dato que sea apropiado
+      'id_value':id!.value!,
+      'firstName': name!.first!,
+      'lastName': name!.last!,
+      'title': name!.title!,
       'email': email,
-      'location': location!.city,
+      'location': location!.city!,
       'cell': cell,
-      'picture': picture!.thumbnail,
+      'picture': picture!.thumbnail!,
       'gender': gender,
     };
   }
@@ -78,20 +79,24 @@ class Location {
 }
 
 class Id {
+  String? name;
   String? value;
 
-  Id(this.value);
+  Id(this.name, this.value);
 
   Id.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
     value = json['value'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
     data['value'] = this.value;
     return data;
   }
 }
+
 
 class Picture {
   String? thumbnail;

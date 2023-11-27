@@ -6,7 +6,7 @@ class AppDatabase{
 
   final int version=1;
   final String databaseName='friendfindr.db';       //PLURAL
-  final String tableName= 'users_favorites.db';        //PLURAL
+  final String tableName= 'users_favorites';        //PLURAL
 
   Database? _db;
 
@@ -16,16 +16,19 @@ class AppDatabase{
     _db = await openDatabase(join(await getDatabasesPath(), databaseName),
         onCreate: (database, version){
           String query= '''CREATE TABLE $tableName (
-          id TEXT PRIMARY KEY,
-              firstName TEXT,
-          lastName TEXT,
-          title TEXT,
-          email TEXT,
-          city TEXT,
-          cell TEXT,
-          thumbnail TEXT,
-          gender TEXT
-          )''';
+  id_name TEXT,
+  id_value TEXT,
+  firstName TEXT,
+  lastName TEXT,
+  title TEXT,
+  email TEXT,
+  location TEXT,
+  cell TEXT,
+  picture TEXT,
+  gender TEXT,
+  PRIMARY KEY (id_name, id_value)
+)''';
+
           log(query);
           database.execute(query);
         }, version: version
