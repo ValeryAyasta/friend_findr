@@ -12,7 +12,6 @@ class UserRepository{
 
     db.insert(AppDatabase().tableName, user.toMap()).then((value) => print('Agregado'));
 
-    //print('Agregado');
   }
 
   Future delete(User user) async {
